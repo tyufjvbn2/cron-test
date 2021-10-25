@@ -10,18 +10,30 @@ import schedule from "node-schedule";
 
 // let daily
 let routine: any;
+let routinee: any;
+let loutine: any;
 
 try {
 	// mongooseConfig();
 	const app = express();
 
 	const log = () => {
-		console.log("active");
+		console.log("active!");
+	};
+	const log2 = () => {
+		console.log("active2!");
+	};
+	const log3 = () => {
+		console.log("active3!");
+	};
+	const log4 = () => {
+		console.log("active4!");
 	};
 
 	const test = () => {
 		console.log("cron set again");
 		routine = schedule.scheduleJob(`10 * * * * *`, log);
+		routinee = schedule.scheduleJob("20 * * * * *", log2);
 	};
 
 	const dailyRepeat = () => {
@@ -30,12 +42,15 @@ try {
 			// console.log("who are you", routine);
 			if (!routine) {
 				console.log("cron didn't set. I will set again");
-				test();
 			} else {
 				routine.cancel();
+				routinee.cancelNext(true);
 				console.log("cron schedule reset!");
-				test();
 			}
+			test();
+			loutine = schedule.scheduleJob("30 * * * * *", log3);
+			loutine.cancel();
+			loutine = schedule.scheduleJob("40 * * * * *", log4);
 		});
 	};
 
