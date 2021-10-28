@@ -42,7 +42,7 @@ try {
 		if (power) {
 			console.log("cron set again");
 			routine = schedule.scheduleJob(`10 * * * * *`, log);
-			routinee = schedule.scheduleJob("20 * * * * *", log2);
+			// routinee = schedule.scheduleJob("20 * * * * *", log2);
 		} else {
 			console.log("power off, now schedule will not call again");
 		}
@@ -56,32 +56,39 @@ try {
 				console.log("cron didn't set. I will set again");
 			} else {
 				routine.cancel(); //매번 하나 취소
-				routinee.cancelNext(true); //처음 하나만 취소
+				// routinee.cancelNext(true); //처음 하나만 취소
 				console.log("cron schedule reset!");
 			}
 			test();
-			loutine = schedule.scheduleJob("30 * * * * *", log3);
-			loutine.cancel(); //실행 되자마자 취소
-			loutine = schedule.scheduleJob("40 * * * * *", log4); //취소가 안되고 있음
+			// loutine = schedule.scheduleJob("30 * * * * *", log3);
+			// loutine.cancel(); //실행 되자마자 취소
+			// loutine = schedule.scheduleJob("40 * * * * *", log4); //취소가 안되고 있음
 		});
 	};
 
 	//실행 후 한번만 정지되고 일반 함수 실행 때문에 다음턴에는 다시 실행됨
 	router.get("/1", (req, res) => {
-		console.log("action accepted");
+		console.log("action accepted : small stop");
 		routine.cancel();
-		console.log("action done");
+		console.log("action done: small stop");
 
-		res.status(200).json({ message: "action done" });
+		res.status(200).json({ message: "action done: small stop" });
 	});
 
 	//이제 test 내부에서 schedule 도는건 꺼짐, 0초에 반복되는건 지속
 	//외부 스케줄은 stop 못함
 	router.get("/2", (req, res) => {
-		console.log("action accepted");
+		console.log("action accepted : power off");
 		power = 0;
-		console.log("action done");
-		res.status(200).json({ message: "action done" });
+		console.log("action done : power off");
+		res.status(200).json({ message: "action done : power off" });
+	});
+
+	router.get("/3", (req, res) => {
+		console.log("action accepted : power on");
+		power = 1;
+		console.log("action done : power on");
+		res.status(200).json({ message: "action done : power on" });
 	});
 
 	dailyRepeat(); //실행 예약하기
